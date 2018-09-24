@@ -175,39 +175,71 @@ for (var i = 0; i < items.length; i++) {
     itemElement.querySelector('.card__characteristic').textContent = 'Без сахара (' + items[i].nutritionFacts.energy + ')';
   }
   itemElement.querySelector('.card__composition-list').textContent = items[i].nutritionFacts.contents;
-  catalogCards.appendChild(itemElement);
-}
 
-var cart = document.querySelector('.goods__cards');
-var favoriteBtns = document.querySelectorAll('.card__btn-favorite');
-for (var i = 0; i < favoriteBtns.length; i++) {
-  favoriteBtns[i].addEventListener('click', function (e) {
+  itemElement.querySelector('.card__btn-favorite').addEventListener('click', function (e) {
     e.preventDefault();
     e.currentTarget.classList.toggle('card__btn-favorite--selected');
-
   });
-}
-var cartBtns = document.querySelectorAll('.card__btn');
-for (var i = 0; i < cartBtns.length; i++) {
-  cartBtns[i].addEventListener('click', function (e) {
+
+  itemElement.querySelector('.card__btn').addEventListener('click', function (e) {
     e.preventDefault();
     var itemId = e.currentTarget.dataset.id;
     var item = items[itemId];
     addFoodToCart(item);
   });
+
+  catalogCards.appendChild(itemElement);
 }
 
+var cart = document.querySelector('.goods__cards');
 /**
  * Функция добавления товара в корзину
  * @param {Object} item объект товара
  */
 var addFoodToCart = function (item) {
+  var countInCart = 0;
+  if (item.amount > 0) {
+    item.amount--;
+    countInCart = 1;
+  }
   cart.classList.remove('goods__cards--empty');
   document.querySelector('.goods__card-empty').classList.add('visually-hidden');
   var templateCardOrder = document.querySelector('#card-order').content.querySelector('.card-order');
   var orderElement = templateCardOrder.cloneNode(true);
   orderElement.querySelector('.card-order__title').textContent = item.name;
   orderElement.querySelector('.card-order__img').src = item.picture;
-  orderElement.querySelector('.card-order__price').innerHTML = item.price + '<span class="card__currency">₽</span><span class="card__weight">/ '+item.weight + ' Г</span></span>';
+  orderElement.querySelector('.card-order__price').innerHTML = item.price + '<span class="card__currency">₽</span><span class="card__weight">/ ' + item.weight + ' Г</span></span>';
+  orderElement.querySelector('.card-order__count').value = countInCart;
+  orderElement.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (e.target.classList.contains('card-order__close')) {
+      cart.removeChild(e.currentTarget);
+      item.amount++;
+    } else if (e.target.classList.contains('card-order__btn--increase')) {
+      if (item.amount > countInCart) {
+        orderElement.querySelector('.card-order__count').value = ++countInCart;
+      }
+    } else if (e.target.classList.contains('card-order__btn--decrease')) {
+      if (countInCart > 0) {
+        orderElement.querySelector('.card-order__count').value = --countInCart;
+      }
+    }
+  });
   cart.appendChild(orderElement);
 };
+
+var delivery = document.querySelector('.deliver__toggle');
+var deliveryTabStore = document.querySelector('.deliver__store');
+var deliveryTabCourier = document.querySelector('.deliver__courier');
+delivery.addEventListener('click', function (e) {
+  if (e.target.classList.contains('toggle-btn__label')) {
+    if (e.target.getAttribute('for') === 'deliver__store') {
+      deliveryTabStore.classList.remove('visually-hidden');
+      deliveryTabCourier.classList.add('visually-hidden');
+    } else {
+      deliveryTabStore.classList.add('visually-hidden');
+      deliveryTabCourier.classList.remove('visually-hidden');
+    }
+  }
+});
+
