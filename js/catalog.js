@@ -1,47 +1,6 @@
 'use strict';
 
-
-/**
- * Функция для генерации строки состава
- * @param {Array} foods массив продуктов
- * @return {string} строка с составом
- */
-(var generateFoods = function (foods) {
-  var countFoods = generateRandomNumber(1, foods.length - 1);
-  var newFoods = foods.slice(countFoods);
-  return newFoods.join(', ');
-};
-
-/**
- * Функция генерации массива товаров
- * @param {number} count количество товаров
- * @param {Array} names массив имен
- * @param {Array} pictures массив наших изображений
- * @param {Array} foods массив продуктов
- * @return {Array} массив товаров
- */
-var generateCommodities = function (count, names, pictures, foods) {
-  var commodities = [];
-  for (var i = 0; i < count; i++) {
-    commodities[i] = {
-      name: names[generateRandomNumber(0, names.length - 1)],
-      picture: 'img/cards/' + pictures[generateRandomNumber(0, pictures.length - 1)],
-      amount: generateRandomNumber(0, 20),
-      price: generateRandomNumber(100, 1500),
-      weight: generateRandomNumber(30, 300),
-      rating: {
-        value: generateRandomNumber(1, 5),
-        number: generateRandomNumber(10, 900),
-      },
-      nutritionFacts: {
-        sugar: !!generateRandomNumber(0, 1),
-        energy: generateRandomNumber(70, 500),
-        contents: generateFoods(foods),
-      }
-    };
-  }
-  return commodities;
-};
+// Модуль catalog.js
 
 var catalogCards = document.querySelector('.catalog__cards');
 catalogCards.classList.remove('catalog__cards--load');
@@ -49,7 +8,7 @@ var catalogLoad = document.querySelector('.catalog__load');
 catalogLoad.classList.add('visually-hidden');
 
 var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
-var items = generateCommodities(GOODS_COUNT, NAMES, PICTURES, FOODS);
+var items = window.data.items;
 for (var i = 0; i < items.length; i++) {
   var itemElement = templateCard.cloneNode(true);
   if (items[i].amount && items[i].amount <= 5) {
@@ -119,5 +78,6 @@ var addFoodToCart = function (item) {
   orderElement.querySelector('.card-order__img').src = item.picture;
   orderElement.querySelector('.card-order__price').innerHTML = item.price + '<span class="card__currency">₽</span><span class="card__weight">/ '+item.weight + ' Г</span></span>';
   cart.appendChild(orderElement);
-})();
+}
+}());
 

@@ -1,6 +1,14 @@
 'use strict';
+// Модуль filter.js
 
-(var changePrice = function (pin, price) {
+Обработчик событий
+(function () {
+  /**
+ * Функция генерации случ. числа в заданном диапазоне
+ * @param {number} pin точка опускания мыши
+ * @param {number} price цена
+ */
+  var changePrice = function (pin, price) {
   pin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -36,4 +44,4 @@ changePrice(pinLeft, priceLeft);
 var pinRight = document.querySelector('.range__btn--right');
 var priceRight = document.querySelector('.range__price--max');
 changePrice(pinRight, priceRight);
-)();
+}());
