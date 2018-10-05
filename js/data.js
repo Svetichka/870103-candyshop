@@ -1,7 +1,7 @@
 'use strict';
 // Модуль data.js
-(function ()
-{var GOODS_COUNT = 26;
+(function () {
+var GOODS_COUNT = 26;
 var PICTURES = [
   'gum-cedar.jpg',
   'gum-chile.jpg',

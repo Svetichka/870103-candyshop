@@ -1,7 +1,7 @@
 'use strict';
 // Модуль order.js
 (function () {
-  var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
+var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
 var items = generateCommodities(GOODS_COUNT, NAMES, PICTURES, FOODS);
 for (var i = 0; i < items.length; i++) {
   var itemElement = templateCard.cloneNode(true);

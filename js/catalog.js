@@ -1,7 +1,7 @@
 'use strict';
 
 // Модуль catalog.js
-
+(function () {
 var catalogCards = document.querySelector('.catalog__cards');
 catalogCards.classList.remove('catalog__cards--load');
 var catalogLoad = document.querySelector('.catalog__load');
