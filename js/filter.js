@@ -1,10 +1,8 @@
 'use strict';
 // Модуль filter.js
-
-Обработчик событий
 (function () {
  /**
- * Функция генерации случ. числа в заданном диапазоне
+ * Функция изменения цены в фильтре
  * @param {number} pin точка опускания мыши
  * @param {number} price цена
  */
@@ -44,4 +42,28 @@ changePrice(pinLeft, priceLeft);
 var pinRight = document.querySelector('.range__btn--right');
 var priceRight = document.querySelector('.range__price--max');
 changePrice(pinRight, priceRight);
+
+var filterState = {
+  foodType: undefined,
+  foodProperty: undefined,
+  foodPrice: {
+    min: 0,
+    max: 235
+  },
+  foodMark: undefined,
+  foodSort: 'popular'
+}
+
+/**
+ * Функция обработки при нажатии фильтра
+ * @param {Object} evt объект самого события
+ */
+var onFilterClick = function (evt) {
+  var currentElement = evt.currentTarget;
+  var currentFilterName = currentElement.name;
+  if (currentElement === 'food-type') {
+
+  }
+}
+
 }());

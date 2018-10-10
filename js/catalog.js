@@ -6,46 +6,63 @@ var catalogCards = document.querySelector('.catalog__cards');
 catalogCards.classList.remove('catalog__cards--load');
 var catalogLoad = document.querySelector('.catalog__load');
 catalogLoad.classList.add('visually-hidden');
-
+var allGoods;
 var templateCard = document.querySelector('#card').content.querySelector('.catalog__card');
-var items = window.data.items;
-for (var i = 0; i < items.length; i++) {
+var createGoods = function (goods) {
+  allGoods = goods;
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < goods.length; i++) {
+    fragment.appendChild(createGoodsElement(goods[i], i));
+  }
+  catalogCards.appendChild(fragment);
+};
+var createGoodsElement = function (item, i) {
   var itemElement = templateCard.cloneNode(true);
-  if (items[i].amount && items[i].amount <= 5) {
+  if (item.amount && item.amount <= 5) {
     itemElement.classList.remove('card--in-stock');
     itemElement.classList.add('card--little');
-  } else if (!items[i].amount) {
+  } else if (!item.amount) {
     itemElement.classList.remove('card--in-stock');
     itemElement.classList.add('card--soon');
   }
   itemElement.querySelector('.card__btn').dataset.id = i;
-  itemElement.querySelector('.card__title').textContent = items[i].name;
-  itemElement.querySelector('.card__img').src = items[i].picture;
-  itemElement.querySelector('.card__price').innerHTML = items[i].price + '<span class="card__currency">₽</span><span class="card__weight">/ '+items[i].weight + ' Г</span></span>';
+  itemElement.querySelector('.card__title').textContent = item.name;
+  itemElement.querySelector('.card__img').src = "img/cards/" + item.picture;
+  itemElement.querySelector('.card__price').innerHTML = item.price + '<span class="card__currency">₽</span><span class="card__weight">/ '+item.weight + ' Г</span></span>';
   var rating = itemElement.querySelector('.stars__rating');
-  if (items[i].rating.value === 1) {
-    rating.classList.remove('stars__rating--five');
-    rating.classList.add('stars__rating--one');
-  } else if (items[i].rating.value === 2) {
-    rating.classList.remove('stars__rating--five');
-    rating.classList.add('stars__rating--two');
-  } else if (items[i].rating.value === 3) {
-    rating.classList.remove('stars__rating--five');
-    rating.classList.add('stars__rating--three');
-  } if (items[i].rating.value === 4) {
-    rating.classList.remove('stars__rating--five');
-    rating.classList.add('stars__rating--four');
+  if (item.rating) {
+    if (item.rating.value === 1) {
+      rating.classList.remove('stars__rating--five');
+      rating.classList.add('stars__rating--one');
+    } else if (item.rating.value === 2) {
+      rating.classList.remove('stars__rating--five');
+      rating.classList.add('stars__rating--two');
+    } else if (item.rating.value === 3) {
+      rating.classList.remove('stars__rating--five');
+      rating.classList.add('stars__rating--three');
+    } if (item.rating.value === 4) {
+      rating.classList.remove('stars__rating--five');
+      rating.classList.add('stars__rating--four');
+    }
+    itemElement.querySelector('.star__count').textContent = '(' + item.rating.number + ')';
   }
-  itemElement.querySelector('.star__count').textContent = '(' + items[i].rating.number + ')';
-  if (items[i].nutritionFacts.sugar) {
-    itemElement.querySelector('.card__characteristic').textContent = 'С сахаром (' + items[i].nutritionFacts.energy + ')';
-  } else {
-    itemElement.querySelector('.card__characteristic').textContent = 'Без сахара (' + items[i].nutritionFacts.energy + ')';
+  if (item.nutritionFacts) {
+    if (item.nutritionFacts.sugar) {
+      itemElement.querySelector('.card__characteristic').textContent = 'С сахаром (' + item.nutritionFacts.energy + ')';
+    } else {
+      itemElement.querySelector('.card__characteristic').textContent = 'Без сахара (' + item.nutritionFacts.energy + ')';
+    }
+    itemElement.querySelector('.card__composition-list').textContent = item.nutritionFacts.contents;
   }
-  itemElement.querySelector('.card__composition-list').textContent = items[i].nutritionFacts.contents;
-  catalogCards.appendChild(itemElement);
-}
 
+  return itemElement;
+};
+var showError = function (message) {
+  console.error(message);
+
+
+};
+window.backend.getData(createGoods, showError);
 var cart = document.querySelector('.goods__cards');
 var favoriteBtns = document.querySelectorAll('.card__btn-favorite');
 for (var i = 0; i < favoriteBtns.length; i++) {
@@ -78,6 +95,9 @@ var addFoodToCart = function (item) {
   orderElement.querySelector('.card-order__img').src = item.picture;
   orderElement.querySelector('.card-order__price').innerHTML = item.price + '<span class="card__currency">₽</span><span class="card__weight">/ '+item.weight + ' Г</span></span>';
   cart.appendChild(orderElement);
+}
+window.catalog = {
+  allGoods: allGoods
 }
 }());
 
